@@ -3,7 +3,8 @@ package main
 import "net/http"
 import "github.com/gos-apoorv/golang-web-server/server"
 
-func main(){
+func main() {
 	serveMux := http.NewServeMux()
-
+	server.New(serveMux)
+	http.ListenAndServe(":8080", serveMux)
 }
