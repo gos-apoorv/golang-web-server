@@ -8,10 +8,10 @@ import (
 // Module providing SugaredLogger to fx
 var Module = fx.Options(
 	fx.Provide(
-		func() *zap.SugaredLogger{
+		func() *zap.SugaredLogger {
 			logger, _ := zap.NewProduction()
 			sugar := logger.Sugar()
 			return sugar
-			},
-		),
-	)
+		},
+	),
+)
