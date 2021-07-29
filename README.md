@@ -2,7 +2,7 @@
  This app is a practise code to test a basic web server in golang.
 App will be a basic HTTP Server
 
-App tries to implement [dependency-injection](https://www.tutorialsteacher.com/ioc/dependency-injection) using [go-uber-fx](https://pkg.go.dev/go.uber.org/fx) package. 
+App tries to implement [dependency-injection](https://www.tutorialsteacher.com/ioc/dependency-injection) using Uber's application framework [go-uber-fx](https://pkg.go.dev/go.uber.org/fx). 
 
 ![img.png](img.png)
  
