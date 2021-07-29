@@ -1,29 +1,30 @@
 package rpcserver
 
-import "net/rpc"
+import (
+	"context"
+	"github.com/gos-apoorv/golang-web-server/protobuf"
+)
 
-//User struct for message
-type User struct {
-	Name string
-	Age  int32
-}
+type Handler  = protobuf.UsersServer
 
-//Handler interface definition
-type Handler struct {
+//handler interface exposes the function of User Server Method
+type handler struct {
+	protobuf.UnimplementedUsersServer
 }
 
 //New returns the RPC handler
-func New() *Handler {
-	handler := &Handler{}
-	err := rpc.Register(handler)
-	if err != nil {
-		panic(err)
-	}
-	return handler
+func New() (Handler, error) {
+	return &handler{},nil
 }
 
 //GetUsers return the list of users
-func (handler *Handler) GetUsers(payload int, reply *string) error {
-	// add logic to return users
-	return nil
+func (h *handler) GetUsers(ctx context.Context, req *protobuf.EmptyReq) (*protobuf.GetUsersResponse,error) {
+	return &protobuf.GetUsersResponse{
+		Users: []*protobuf.User{
+			{
+				Name: "test user",
+				Age: 11,
+			},
+		},
+	}, nil
 }

@@ -2,15 +2,15 @@ package main
 
 import (
 	"context"
-	"net"
-	"net/http"
-	"net/rpc"
-
 	"github.com/gos-apoorv/golang-web-server/httpserver"
 	"github.com/gos-apoorv/golang-web-server/loggerfx"
+	"github.com/gos-apoorv/golang-web-server/protobuf"
 	"github.com/gos-apoorv/golang-web-server/rpcserver"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"net"
+	"net/http"
 )
 
 func main() {
@@ -25,7 +25,8 @@ func main() {
 
 }
 
-func registerHooks(lifecycle fx.Lifecycle, serveMux *http.ServeMux, sugar *zap.SugaredLogger) {
+func registerHooks(lifecycle fx.Lifecycle, serveMux *http.ServeMux, sugar *zap.SugaredLogger,
+	rpcserver rpcserver.Handler) {
 	lifecycle.Append(
 		fx.Hook{
 			OnStart: func(ctx context.Context) error {
@@ -34,11 +35,11 @@ func registerHooks(lifecycle fx.Lifecycle, serveMux *http.ServeMux, sugar *zap.S
 				if err != nil {
 					sugar.Errorf("Error while starting RPC httpserver: %v", err)
 				}
-				go func() {
-					for {
-						rpc.Accept(listener)
-					}
-				}()
+				var opts []grpc.ServerOption
+				gprcServer := grpc.NewServer(opts...)
+				protobuf.RegisterUsersServer(gprcServer, rpcserver)
+				go gprcServer.Serve(listener)
+
 				sugar.Info("RPC Server running on localhost:8082")
 
 				//start the HTTP Server

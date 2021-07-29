@@ -1,5 +1,5 @@
 syntax = "proto3";
-package users;
+package protobuf;
 
 option go_package = ".;user";
 
