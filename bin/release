@@ -1,0 +1,42 @@
+#!/bin/bash
+
+function usage() {
+    echo $"Usage: $0 {apply}"
+    exit 1
+}
+
+function master() {
+    git checkout master
+    git pull --rebase
+}
+
+function live() {
+    git checkout -b live
+    git push -f origin live
+    git checkout master
+    git branch -d live
+}
+
+SUB_COMMAND=$1; shift
+
+while getopts ":v:" o; do
+    case "${o}" in
+        v)
+            version=${OPTARG}
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+case "${SUB_COMMAND}" in
+    apply)
+        master
+        live
+        ;;
+    *)
+        usage
+esac
