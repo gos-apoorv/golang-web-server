@@ -32,19 +32,26 @@ func registerHooks(lifecycle fx.Lifecycle, serveMux *http.ServeMux, sugar *zap.S
 			OnStart: func(ctx context.Context) error {
 				//start the RPC Server
 				listener, err := net.Listen("tcp", ":8082")
+
 				if err != nil {
 					sugar.Errorf("Error while starting RPC httpserver: %v", err)
 				}
+
 				var opts []grpc.ServerOption
 				gprcServer := grpc.NewServer(opts...)
 				protobuf.RegisterUsersServer(gprcServer, rpcserver)
-				go gprcServer.Serve(listener)
+				go func(){
+					_ = gprcServer.Serve(listener)
+				}()
 
 				sugar.Info("RPC Server running on localhost:8082")
 
 				//start the HTTP Server
 				sugar.Info("Listening on localhost:8080")
-				go http.ListenAndServe(":8080", serveMux)
+				go func(){
+					_ = http.ListenAndServe(":8080", serveMux)
+				}()
+
 				return nil
 			},
 			OnStop: func(ctx context.Context) error {

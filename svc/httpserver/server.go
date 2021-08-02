@@ -1,6 +1,9 @@
 package httpserver
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+)
 
 //Handler for HTTP request
 type Handler struct {
@@ -22,5 +25,9 @@ func (handler *Handler) registerEndpoints() {
 //RenderMessage to render the desired message into browser
 func (handler *Handler) RenderMessage(rw http.ResponseWriter, req *http.Request) {
 	rw.WriteHeader(200)
-	rw.Write([]byte("Test Hello World Sample!!!"))
+	_,err:= rw.Write([]byte("Test Hello World Sample!!!"))
+
+	if err != nil{
+		fmt.Printf("error while writing response")
+	}
 }

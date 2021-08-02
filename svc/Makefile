@@ -1,6 +1,9 @@
 fmt: ## gofmt and goimports all go files
 	find . -name '*.go' -not -wholename './vendor/*' | while read -r file; do gofmt -w -s "$$file"; goimports -w "$$file"; done
 
+lint: dep ## Run linter for the code
+	golangci-lint run
+
 dep: ## Get all dependencies
 	go env -w GOPROXY=direct
 	go env -w GOSUMDB=off
