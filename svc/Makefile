@@ -18,7 +18,7 @@ start-service: ##Run the Service
 	go run main.go
 
 stop-service: ##Terminate the Service
-	kill $(lsof -ti:8080,8082)
+	kill $$(lsof -ti:8080,8082)
 
 # Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:
